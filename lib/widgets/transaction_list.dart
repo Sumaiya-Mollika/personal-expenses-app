@@ -8,10 +8,9 @@ class TransactionList extends StatelessWidget {
   TransactionList(this.transactions, this.deletTx);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: transactions.isEmpty
-          ? Column(
+    return transactions.isEmpty
+        ? LayoutBuilder(builder: (ctx, constrains) {
+            return Column(
               children: [
                 Text('No Transaction Yet',
                     style: TextStyle(
@@ -22,54 +21,54 @@ class TransactionList extends StatelessWidget {
                   height: 10,
                 ),
                 Container(
-                  height: 350,
+                  height: constrains.maxHeight * 0.6,
                   child: Image.network(
                     'https://cdn.dribbble.com/users/2130329/screenshots/6640456/jiomoney_notransactions-01.png',
                     fit: BoxFit.cover,
                   ),
                 )
               ],
-            )
-          : ListView.builder(
-              itemCount: transactions.length,
-              itemBuilder: (context, index) {
-                return Card(
-                    elevation: 5,
-                    child: ListTile(
-                      leading: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 5),
-                        child: FittedBox(
-                          child: Text(
-                              '${transactions[index].amount.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              )),
-                        ),
-                      ),
-                      title: Text('${transactions[index].title}',
-                          style: TextStyle(
+            );
+          })
+        : ListView.builder(
+            itemCount: transactions.length,
+            itemBuilder: (context, index) {
+              return Card(
+                  elevation: 5,
+                  child: ListTile(
+                    leading: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 5),
+                      child: FittedBox(
+                        child: Text(
+                            '${transactions[index].amount.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.black)),
-                      subtitle: Text(
-                          DateFormat.yMMMd().format(transactions[index].date),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Colors.grey)),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                          color: Theme.of(context).errorColor,
-                        ),
-                        onPressed: () => deletTx(transactions[index].id),
+                              fontSize: 20,
+                            )),
                       ),
-                    ));
-              },
-            ),
-    );
+                    ),
+                    title: Text('${transactions[index].title}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black)),
+                    subtitle: Text(
+                        DateFormat.yMMMd().format(transactions[index].date),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.grey)),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: Theme.of(context).errorColor,
+                      ),
+                      onPressed: () => deletTx(transactions[index].id),
+                    ),
+                  ));
+            },
+          );
   }
 }
